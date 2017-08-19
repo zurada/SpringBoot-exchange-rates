@@ -1,0 +1,20 @@
+image: maven:3.3.9
+
+pipelines:
+  branches:
+    master:
+      - step:
+          script:
+          - mvn -B clean install # -B batch mode makes Maven less verbose
+    develop:
+      - step:
+          script:
+          - mvn -B clean install
+    feature/*:
+      - step:
+          script:
+          - mvn -B clean install
+    fix/*:
+      - step:
+          script:
+          - mvn -B clean install
