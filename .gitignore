@@ -1,0 +1,10 @@
+.idea
+*.iml
+target/
+.project
+.classpath
+*.project
+*.settings*
+
+# Mac crap
+.DS_Store
