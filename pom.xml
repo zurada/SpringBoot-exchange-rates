@@ -39,6 +39,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!--JACKSON DATE PARSER -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
         <!-- LOMBOK -->
         <dependency>
             <groupId>org.projectlombok</groupId>
