@@ -2,6 +2,7 @@ package com.avrios.sample.exchange.web;
 
 import com.avrios.sample.exchange.ApplicationTest;
 import junit.framework.TestCase;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,13 +17,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ApplicationTest.class)
+@Slf4j
 public class SampleControllerTest extends TestCase {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
     @Autowired
     protected WebApplicationContext context;
     protected MockMvc mockMvc;
@@ -41,6 +43,7 @@ public class SampleControllerTest extends TestCase {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse().getContentAsString());
     }
 }

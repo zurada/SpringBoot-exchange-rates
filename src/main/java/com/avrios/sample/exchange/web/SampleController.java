@@ -1,21 +1,20 @@
 package com.avrios.sample.exchange.web;
 
+import com.avrios.sample.exchange.dto.SampleDto;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Slf4j
 public class SampleController {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
-
     @ResponseBody
-    @RequestMapping("/api/hello/{name}")
-    public String helloWorld(@PathVariable String name) {
-        log.debug("Logging works!");
-        return "Hello " + name + "!";
+    @GetMapping("/api/hello/{name}")
+    public ResponseEntity<SampleDto> helloWorld(@PathVariable String name) {
+        log.info("Logging for name: {}", name);
+        return ResponseEntity.ok(SampleDto.builder().name(name).build());
     }
 }
