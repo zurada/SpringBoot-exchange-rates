@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
     INCORRECT_REQUEST_BODY(1000),
-    DATE_WRONG_FORMAT(1001);
+    DATE_WRONG_FORMAT(1001),
+    ERROR_LOADING_ECB_DATA(1002);
     private final int code;
 
     public static class Constants {
