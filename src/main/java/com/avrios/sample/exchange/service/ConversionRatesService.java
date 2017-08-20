@@ -10,4 +10,9 @@ public interface ConversionRatesService {
      * @return current conversion rate for target currency using data from ECB
      */
     ConversionRateOutDto getConversionRate(ConversionRateInDto conversionRateInDto);
+
+    /**
+     * Scheduled update of conversion rates from ECB
+     */
+    void scheduleUpdateConversionRates();
 }
