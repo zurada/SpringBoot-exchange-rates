@@ -26,6 +26,7 @@ public class ConversionRatesServiceImpl implements ConversionRatesService {
     public ConversionRateOutDto getConversionRate(ConversionRateInDto conversionRateInDto) {
         List<ConversionRateModel> allData = inMemoryDataService.getConversionRateModels();
 
+
         isEcbDataLoadedSuccessfuly(allData);
 
         List<ConversionRateModel> onlyTargetCurrencies = allData
@@ -48,16 +49,16 @@ public class ConversionRatesServiceImpl implements ConversionRatesService {
 
         return ConversionRateOutDto
                 .builder()
-                .actualRate(result.getRate())
+                .rate(result.getRate())
                 .targetCurrency(result.getCurrency().getCurrencyCode())
-                .dateOfOperation(result.getDate())
+                .date(result.getDate())
                 .build();
     }
 
 
     @Override
     //TODO put cron exp into config file
-    @Scheduled(cron = "0/10 * * ? * *", zone = "CET") //TODO change cron
+    @Scheduled(cron = "${ecb.update-rates.cron}", zone = "CET") //TODO change cron
     public void scheduleUpdateConversionRates() {
         log.info("Running scheduled task for updating conversion rates.");
         try {
@@ -65,10 +66,6 @@ public class ConversionRatesServiceImpl implements ConversionRatesService {
         } catch (Exception e) {
             log.error("Exception during reloading ecb data. Exception was: {}", e);
         }
-        //TODO to delete -
-        inMemoryDataService.getConversionRateModels().forEach(conversionRateModel -> {
-            log.info("Conver: {}", conversionRateModel);
-        });
     }
 
     private void isEcbDataLoadedSuccessfuly(List<ConversionRateModel> allData) {

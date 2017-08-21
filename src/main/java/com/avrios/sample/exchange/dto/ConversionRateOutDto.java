@@ -11,8 +11,8 @@ import java.time.LocalDate;
 @Builder
 public class ConversionRateOutDto {
     private String targetCurrency;
-    private String actualRate;
+    private String rate;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dateOfOperation;
+    private LocalDate date;
 }
