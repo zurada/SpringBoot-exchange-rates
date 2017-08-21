@@ -1,0 +1,10 @@
+spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+ecb:
+  reference-rates:
+    90-days-url: http://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml
+  update-rates:
+    cron: 0 0 16-17 * * MON-FRI
