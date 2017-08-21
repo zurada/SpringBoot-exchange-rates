@@ -21,23 +21,23 @@ There are two approaches:
 2. try api/rates/get/one endpoint via swagger or postman:
 
 Example request:
-'''
-POST api/rates/get/one
-{
-  "dateOfConversion": "2017-08-21",
-  "targetCurrency": "USD"
-}
-'''
+
+  POST api/rates/get/one
+  {
+    "dateOfConversion": "2017-08-21",
+    "targetCurrency": "USD"
+  }
+
 Date format is yyyy-MM-dd
 
 Example response:
-'''
-{
-  "targetCurrency": "USD",
-  "rate": "1.1761",
-  "date": "2017-08-21"
-}
-'''
+
+  {
+    "targetCurrency": "USD",
+    "rate": "1.1761",
+    "date": "2017-08-21"
+  }
+
 
 Error codes (http status 400):
 
@@ -54,12 +54,12 @@ Error codes (http status 400):
     NO_SUCH_CURRENCY(1005) - when using wrong currency
 
 Error example response:
-'''
-{
-  "errorCode": 1005,
-  "details": "Currency code is invalid"
-}
-'''
+
+  {
+    "errorCode": 1005,
+    "details": "Currency code is invalid"
+  }
+
 
 
 
