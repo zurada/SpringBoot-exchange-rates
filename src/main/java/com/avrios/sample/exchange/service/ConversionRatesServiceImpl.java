@@ -57,8 +57,7 @@ public class ConversionRatesServiceImpl implements ConversionRatesService {
 
 
     @Override
-    //TODO put cron exp into config file
-    @Scheduled(cron = "${ecb.update-rates.cron}", zone = "CET") //TODO change cron
+    @Scheduled(cron = "${ecb.update-rates.cron}", zone = "CET")
     public void scheduleUpdateConversionRates() {
         log.info("Running scheduled task for updating conversion rates.");
         try {
