@@ -15,8 +15,4 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @Bean
-    public InMemoryDataService inMemoryDataService() {
-        return new InMemoryDataServiceImpl();
-    }
 }

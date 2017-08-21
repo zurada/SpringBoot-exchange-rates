@@ -6,22 +6,29 @@ import com.avrios.sample.exchange.model.ConversionRateModel;
 import com.avrios.sample.exchange.xml.Envelope;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.Currency;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
+@Service
 public class InMemoryDataServiceImpl implements InMemoryDataService {
 
     @Value("${ecb.reference-rates.90-days-url}")
     public String ECB_REFERENCE_RATES_URL;
 
     private List<ConversionRateModel> conversionRateModels;
+
     @Override
     @PostConstruct
     public void initConversionRatesData() {
@@ -45,16 +52,41 @@ public class InMemoryDataServiceImpl implements InMemoryDataService {
     @Override
     public void reloadData() throws Exception {
         log.info("Reloading conversion rates");
-        List<ConversionRateModel> tempList = new CopyOnWriteArrayList<>();
-        // define data source
-        URL url = new URL(ECB_REFERENCE_RATES_URL);
+        URL url = defineEcbDataSource();
+        Envelope envelope = parseXml(url);
+        loopThroughData(envelope);
+    }
 
-        // parse XML
+    /**
+     * Prepares ECB 90 days dataSource
+     *
+     * @return ecb url
+     * @throws MalformedURLException
+     */
+    private URL defineEcbDataSource() throws MalformedURLException {
+        return new URL(ECB_REFERENCE_RATES_URL);
+    }
+
+    /**
+     * Unmarshall XML using JAXB
+     *
+     * @param url with ECB data
+     * @return unmarshalled Envelope object with all the data
+     * @throws JAXBException
+     */
+    private Envelope parseXml(URL url) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(Envelope.class);
         Unmarshaller unmarshaller = context.createUnmarshaller();
-        Envelope envelope = (Envelope) unmarshaller.unmarshal(url);
+        return (Envelope) unmarshaller.unmarshal(url);
+    }
 
-        // loop through data
+    /**
+     * Iterates over ecb data and saves into memory as ConversionRateModels
+     *
+     * @param envelope unmarshalled Envelope object containing all the data
+     */
+    private void loopThroughData(Envelope envelope) {
+        List<ConversionRateModel> tempList = new CopyOnWriteArrayList<>();
         Currency euro = Currency.getInstance("EUR");
         envelope.getCube()
                 .getCubes()
@@ -78,8 +110,6 @@ public class InMemoryDataServiceImpl implements InMemoryDataService {
                 );
         Collections.sort(tempList);
         setConversionRateModels(tempList);
-
     }
-
 
 }
