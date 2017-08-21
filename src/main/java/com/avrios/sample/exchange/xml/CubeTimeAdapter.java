@@ -9,7 +9,6 @@ public class CubeTimeAdapter extends XmlAdapter<String, LocalDate> {
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-
     @Override
     public String marshal(LocalDate time) throws Exception {
         if (time != null) {

@@ -1,5 +1,7 @@
 package com.avrios.sample.exchange.xml;
 
+import lombok.Data;
+
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
@@ -8,18 +10,22 @@ import java.util.List;
 
 @XmlType(namespace = "http://www.ecb.int/vocabulary/2002-08-01/eurofxref")
 @XmlAccessorType(XmlAccessType.NONE)
+@Data
 public class Cube {
 
+    @XmlAttribute
+    @XmlJavaTypeAdapter(CubeTimeAdapter.class)
     private LocalDate time;
+    @XmlAttribute
     private String currency;
+    @XmlAttribute
     private String rate;
+    @XmlElement(name = "Cube")
     private List<Cube> cubes;
 
     public Cube() {
         this(null, null, null, null);
     }
-
-    ;
 
     public Cube(LocalDate time) {
         this(time, null, null, null);
@@ -40,41 +46,7 @@ public class Cube {
         this.cubes = cubes;
     }
 
-    @XmlAttribute
-    @XmlJavaTypeAdapter(CubeTimeAdapter.class)
     public LocalDate getTime() {
         return time;
     }
-
-    public void setTime(LocalDate time) {
-        this.time = time;
-    }
-
-    @XmlAttribute
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    @XmlAttribute
-    public String getRate() {
-        return rate;
-    }
-
-    public void setRate(String rate) {
-        this.rate = rate;
-    }
-
-    @XmlElement(name = "Cube")
-    public List<Cube> getCubes() {
-        return cubes;
-    }
-
-    public void setCubes(List<Cube> cubes) {
-        this.cubes = cubes;
-    }
-
 }

@@ -12,8 +12,4 @@ public interface ConversionRatesService {
      */
     ConversionRateOutDto getConversionRate(ConversionRateInDto conversionRateInDto);
 
-    /**
-     * Scheduled update of conversion rates from ECB
-     */
-    void scheduleUpdateConversionRates();
 }
