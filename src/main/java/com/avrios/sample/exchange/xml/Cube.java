@@ -2,6 +2,7 @@ package com.avrios.sample.exchange.xml;
 
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Cube {
 
-    private Date time;
+    private LocalDate time;
     private String currency;
     private String rate;
     private List<Cube> cubes;
@@ -20,7 +21,7 @@ public class Cube {
 
     ;
 
-    public Cube(Date time) {
+    public Cube(LocalDate time) {
         this(time, null, null, null);
     }
 
@@ -28,11 +29,11 @@ public class Cube {
         this(null, currency, rate, null);
     }
 
-    public Cube(Date time, String currency, String rate) {
+    public Cube(LocalDate time, String currency, String rate) {
         this(time, currency, rate, null);
     }
 
-    public Cube(Date time, String currency, String rate, List<Cube> cubes) {
+    public Cube(LocalDate time, String currency, String rate, List<Cube> cubes) {
         this.time = time;
         this.currency = currency;
         this.rate = rate;
@@ -41,11 +42,11 @@ public class Cube {
 
     @XmlAttribute
     @XmlJavaTypeAdapter(CubeTimeAdapter.class)
-    public Date getTime() {
+    public LocalDate getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(LocalDate time) {
         this.time = time;
     }
 
