@@ -1,26 +1,27 @@
 package com.avrios.sample.exchange.xml;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-public class CubeTimeAdapter extends XmlAdapter<String, Date> {
+public class CubeTimeAdapter extends XmlAdapter<String, LocalDate> {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 
     @Override
-    public String marshal(Date time) throws Exception {
+    public String marshal(LocalDate time) throws Exception {
         if (time != null) {
-            // SimpleDateFormat is not thread-safe
-            return new SimpleDateFormat(DATE_FORMAT).format(time);
+            return time.format(FORMATTER);
         }
         return null;
     }
 
     @Override
-    public Date unmarshal(String time) throws Exception {
+    public LocalDate unmarshal(String time) throws Exception {
         if (time != null) {
-            return new SimpleDateFormat(DATE_FORMAT).parse(time);
+            return LocalDate.parse(time, FORMATTER);
         }
         return null;
     }

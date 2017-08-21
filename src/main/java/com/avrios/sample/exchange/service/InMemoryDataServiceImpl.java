@@ -10,9 +10,8 @@ import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.net.URL;
-import java.util.Currency;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
@@ -22,7 +21,6 @@ public class InMemoryDataServiceImpl implements InMemoryDataService {
     public static String ECB_REFERENCE_RATES_URL = "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml";
 
     private List<ConversionRateModel> conversionRateModels;
-
     @Override
     @PostConstruct
     public void initConversionRatesData() {
@@ -49,7 +47,6 @@ public class InMemoryDataServiceImpl implements InMemoryDataService {
         List<ConversionRateModel> tempList = new CopyOnWriteArrayList<>();
         // define data source
         URL url = new URL(ECB_REFERENCE_RATES_URL);
-        //URL url = new URL("http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
 
         // parse XML
         JAXBContext context = JAXBContext.newInstance(Envelope.class);
@@ -63,7 +60,7 @@ public class InMemoryDataServiceImpl implements InMemoryDataService {
                 .forEach(
                         timeCube ->
                         {
-                            Date date = timeCube.getTime();
+                            LocalDate date = timeCube.getTime();
                             timeCube.getCubes().forEach(cube -> {
                                 Currency currency = Currency.getInstance(cube.getCurrency());
                                 String rate = cube.getRate();
@@ -78,6 +75,7 @@ public class InMemoryDataServiceImpl implements InMemoryDataService {
                             });
                         }
                 );
+        Collections.sort(tempList);
         setConversionRateModels(tempList);
 
     }
