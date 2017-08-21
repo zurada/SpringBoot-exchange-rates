@@ -8,7 +8,6 @@ import com.avrios.sample.exchange.model.ConversionRateModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,29 +19,24 @@ import java.util.stream.Collectors;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class ConversionRatesServiceImpl implements ConversionRatesService {
 
-    private InMemoryDataService inMemoryDataService;
+    private final InMemoryDataService inMemoryDataService;
 
     @Override
     public ConversionRateOutDto getConversionRate(ConversionRateInDto conversionRateInDto) {
         List<ConversionRateModel> allData = inMemoryDataService.getConversionRateModels();
 
-
-        isEcbDataLoadedSuccessfuly(allData);
+        checkIfEcgDataIsLoadedSuccessfully(allData);
 
         List<ConversionRateModel> onlyTargetCurrencies = allData
                 .stream()
-                .filter(conversionRateModel -> conversionRateModel
-                        .getCurrency()
-                        .getCurrencyCode()
-                        .equals(conversionRateInDto.getTargetCurrency()))
+                .filter((rateModel) -> filterByTargetCurrency(rateModel, conversionRateInDto))
                 .collect(Collectors.toList());
 
-        containsRequestedCurrency(onlyTargetCurrencies);
+        checkIfContainsRequestedCurrency(onlyTargetCurrencies);
 
         Optional<ConversionRateModel> resultRateModelWithTargetCurrencyAndDate = onlyTargetCurrencies
                 .stream()
-                .filter(conversionRateModel ->
-                        conversionRateModel.getDate().isEqual(conversionRateInDto.getDateOfConversion()))
+                .filter(rateModel -> filterByDate(rateModel, conversionRateInDto))
                 .findFirst();
         ConversionRateModel result = resultRateModelWithTargetCurrencyAndDate
                 .orElseGet(() -> getFirstConversionRateModelBeforeRequestedDate(onlyTargetCurrencies, conversionRateInDto));
@@ -55,31 +49,62 @@ public class ConversionRatesServiceImpl implements ConversionRatesService {
                 .build();
     }
 
-
-    @Override
-    @Scheduled(cron = "${ecb.update-rates.cron}", zone = "CET")
-    public void scheduleUpdateConversionRates() {
-        log.info("Running scheduled task for updating conversion rates.");
-        try {
-            inMemoryDataService.reloadData();
-        } catch (Exception e) {
-            log.error("Exception during reloading ecb data. Exception was: {}", e);
-        }
+    /**
+     * Filters by date
+     *
+     * @param rateModel           rate model from collection
+     * @param conversionRateInDto requested conversion rate dto with desired date
+     * @return true when dates are equal
+     */
+    private boolean filterByDate(ConversionRateModel rateModel, ConversionRateInDto conversionRateInDto) {
+        return rateModel.getDate().isEqual(conversionRateInDto.getDateOfConversion());
     }
 
-    private void isEcbDataLoadedSuccessfuly(List<ConversionRateModel> allData) {
+    /**
+     * Filters by currency name
+     *
+     * @param rateModel           rate model from collection
+     * @param conversionRateInDto requested conversion rate dto with desired currency
+     * @return true when currencies are equal
+     */
+    private boolean filterByTargetCurrency(ConversionRateModel rateModel, ConversionRateInDto conversionRateInDto) {
+        return rateModel
+                .getCurrency()
+                .getCurrencyCode()
+                .equals(conversionRateInDto.getTargetCurrency());
+    }
+
+    /**
+     * Checks if there is data loaded from ECB
+     *
+     * @param allData should contain all ECB data for 90 days with reference rates
+     */
+    private void checkIfEcgDataIsLoadedSuccessfully(List<ConversionRateModel> allData) {
         if (allData.isEmpty()) {
-            throw new CustomException(ErrorCode.INTERNAL_ERROR_SERVER_HAS_NO_DATA, ErrorCode.Constants.INTERNAL_ERROR_SERVER_HAS_NO_DATA_MSG); // no data on server
+            throw new CustomException(ErrorCode.INTERNAL_ERROR_SERVER_HAS_NO_DATA);
         }
     }
 
-
-    private void containsRequestedCurrency(List<ConversionRateModel> onlyTargetCurrencies) {
+    /**
+     * Checks if contains requested currency
+     *
+     * @param onlyTargetCurrencies list of filtered results with desired currency
+     * @throws throws runtimeException when no such currency is found
+     */
+    private void checkIfContainsRequestedCurrency(List<ConversionRateModel> onlyTargetCurrencies) {
         if (onlyTargetCurrencies.isEmpty()) {
-            throw new CustomException(ErrorCode.NO_SUCH_CURRENCY, ErrorCode.Constants.NO_SUCH_CURRENCY_MSG);
+            throw new CustomException(ErrorCode.NO_SUCH_CURRENCY);
         }
     }
 
+    /**
+     * When there is no entry for particular day the method checks what is actual rate with date before the requested date
+     *
+     * @param onlyTargetCurrencies list of filtered results with desired currency
+     * @param conversionRateInDto  requested conversion rate dto with desired currency
+     * @return returns first older conversion rate with date before the requested date
+     * @throws throws runtimeException when date is too old and there is no older entry to return
+     */
     private ConversionRateModel getFirstConversionRateModelBeforeRequestedDate(List<ConversionRateModel> onlyTargetCurrencies, ConversionRateInDto conversionRateInDto) {
         return onlyTargetCurrencies
                 .stream()
@@ -87,7 +112,6 @@ public class ConversionRatesServiceImpl implements ConversionRatesService {
                 .filter(conversionRateModel ->
                         conversionRateModel.getDate().isBefore(conversionRateInDto.getDateOfConversion()))
                 .findFirst()
-                .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_DATE, ErrorCode.Constants.NO_SUCH_DATE_MSG));
+                .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_DATE));
     }
-
 }
