@@ -7,4 +7,4 @@ ecb:
   reference-rates:
     90-days-url: http://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml
   update-rates:
-    cron: 0/10 * * ? * *
+    cron: 0 0 16-17 * * MON-FRI
