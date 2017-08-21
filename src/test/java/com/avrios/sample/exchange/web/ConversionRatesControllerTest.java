@@ -167,7 +167,7 @@ public class ConversionRatesControllerTest extends TestCase {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.dateOfOperation").value(yesterday.toString()))
+                .andExpect(jsonPath("$.date").value(yesterday.toString()))
                 .andReturn().getResponse().getContentAsString());
     }
 

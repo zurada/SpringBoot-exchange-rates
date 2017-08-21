@@ -13,7 +13,6 @@ public class ConversionRateInDto {
     private String targetCurrency;
 
     @NotNull
-    //TODO universal patterns
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfConversion;
 }

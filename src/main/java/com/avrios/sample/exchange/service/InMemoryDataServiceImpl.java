@@ -5,6 +5,7 @@ import com.avrios.sample.exchange.exception.ErrorCode;
 import com.avrios.sample.exchange.model.ConversionRateModel;
 import com.avrios.sample.exchange.xml.Envelope;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
@@ -17,8 +18,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Slf4j
 public class InMemoryDataServiceImpl implements InMemoryDataService {
 
-    //TODO put into configuration
-    public static String ECB_REFERENCE_RATES_URL = "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml";
+    @Value("${ecb.reference-rates.90-days-url}")
+    public String ECB_REFERENCE_RATES_URL;
 
     private List<ConversionRateModel> conversionRateModels;
     @Override
