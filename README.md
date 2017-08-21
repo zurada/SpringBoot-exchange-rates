@@ -15,6 +15,8 @@ There are two approaches:
    * Run in project dir: $ mvn clean install 
    * go to target dir and run: $ java -jar exchange-<VERSION>.jar
 
+Optionally: Please make sure Lombok plugin is installed into Intellij IDE.
+
 ### How to use the service? ###
 
 1. run application and go to http://localhost:8080/swagger-ui.html
@@ -60,6 +62,7 @@ Error example response:
     "details": "Currency code is invalid"
   }
 
+Note: When requested non-workday date (i.e. Sunday) the API returns closest entry with date before requested (in that case it would be Friday)
 
 
 
