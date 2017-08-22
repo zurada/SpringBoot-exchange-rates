@@ -21,7 +21,7 @@ public class SwaggerConfig {
         log.info("Swagger initialization");
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.avrios.sample.exchange.we"))
+                .apis(RequestHandlerSelectors.basePackage("com.avrios.sample.exchange.web"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(new ApiInfo("exchange_service API", "Rest API Documentation", "", null, new Contact("", "", ""), null, null));
