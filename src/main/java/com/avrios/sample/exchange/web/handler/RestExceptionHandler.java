@@ -31,7 +31,6 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    @ResponseBody
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorResponseDto handleRequestBodyNotValidException(MethodArgumentNotValidException exception) {
         log.warn(exception.getMessage());

@@ -45,8 +45,4 @@ public class Cube {
         this.rate = rate;
         this.cubes = cubes;
     }
-
-    public LocalDate getTime() {
-        return time;
-    }
 }
