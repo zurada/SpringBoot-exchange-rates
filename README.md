@@ -1,8 +1,7 @@
-# Avrios Foreign Exchange Rate Service #
+# Foreign Exchange Rate Service #
 
 ### What is this repository for? ###
 
-Sample project for backend developers in recruitment process for Avrios company.
 This is a simple exchange rate service exchanging EUR to any other currency provided by the European Central Bank
 using up-to-date exchange rates. 
 
