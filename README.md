@@ -67,4 +67,4 @@ Note: When requested non-workday date (i.e. Sunday) the API returns closest entr
 
 ### Who do I talk to? ###
 
-Written by Adam Zurada: adam.zurada@gmail.com, +48 889 225 530
+Written by Adam Zurada: adam.zurada (at) gmail.com
