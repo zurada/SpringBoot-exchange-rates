@@ -1,4 +1,4 @@
-# Spring Boot - Foreign Exchange Rate Service #
+# Spring Boot - Foreign Exchange Rates Service #
 
 ### What is this repository for? ###
 
